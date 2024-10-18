@@ -76,11 +76,39 @@ def json_to_csv(json_file, csv_file):
         print(f"Помилка під час конвертації: {e}")
 
 
+# Лободюк: Нова функція для конвертації даних із оновленого .csv у новий .json файл з додаванням нових рядків
+def csv_to_json_with_new_rows(csv_file, json_file):
+    try:
+        # Відкриваємо CSV файл для читання
+        with open(csv_file, mode='r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)  # Читаємо CSV у вигляді словників
+            data = [row for row in reader]  # Створюємо список словників із рядків файлу
+
+        # Додаємо нові рядки
+        new_rows = [
+            {"name": "Козаков Вадим", "age": 28, "grade": 85},
+            {"name": "Урбанович Гафія", "age": 23, "grade": 90}
+        ]
+        data.extend(new_rows)  # Додаємо нові рядки до наявних даних
+
+        # Відкриваємо JSON файл для запису
+        with open(json_file, mode='w', encoding='utf-8') as file:
+            json.dump(data, file, ensure_ascii=False, indent=4)  # Записуємо дані у JSON форматі
+        print(f"Дані успішно сконвертовані з '{csv_file}' у '{json_file}' з додаванням нових рядків.")
+    except FileNotFoundError:
+        # Обробляємо помилку, якщо CSV файл не знайдено
+        print(f"Файл '{csv_file}' не знайдено!")
+    except Exception as e:
+        # Обробляємо інші можливі помилки
+        print(f"Помилка під час конвертації: {e}")
+
+
 # Основна функція програми
 def main():
     csv_file = 'students.csv'  # Назва CSV файлу
     json_file = 'students.json'  # Назва JSON файлу
     updated_csv_file = 'students_updated.csv'  # Назва CSV файлу після оновлення
+    updated_json_file = 'students_updated.json' # Назва JSON файлу після оновлення
 
     # Створюємо CSV файл із даними студентів
     create_csv(csv_file)
@@ -91,6 +119,8 @@ def main():
     # Конвертуємо дані з JSON у CSV з додаванням нових рядків
     json_to_csv(json_file, updated_csv_file)
 
+    # Конвертуємо дані з оновленого CSV у новий JSON
+    csv_to_json_with_new_rows(updated_csv_file, updated_json_file)
 
 # Запуск основної програми
 if __name__ == "__main__":
